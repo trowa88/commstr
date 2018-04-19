@@ -39,7 +39,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/dev/ref/settings/#databases
 
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///jwt_drf'),
+    'default': env.db('DATABASE_URL', default='postgres:///commstr'),
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
@@ -68,6 +68,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'rest_framework',
+    'drf_yasg',
 ]
 LOCAL_APPS = [
     'jwt_drf.users.apps.UsersConfig',
@@ -253,3 +254,27 @@ SOCIALACCOUNT_ADAPTER = 'jwt_drf.users.adapters.SocialAccountAdapter'
 
 # Your stuff...
 # ------------------------------------------------------------------------------
+# django rest framework
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
+        'rest_framework.authentication.BasicAuthentication',
+    ),
+}
+
+# swagger
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'basic': {
+            'type': 'basic'
+        }
+    }
+}
+
+REDOC_SETTINGS = {
+   'LAZY_RENDERING': True
+}
