@@ -341,3 +341,4 @@ pip-selfcheck.json
 jwt_drf/media/
 
 
+.idea
