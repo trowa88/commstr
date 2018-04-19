@@ -1,0 +1,5 @@
+[run]
+include = jwt_drf/*
+omit = *migrations*, *tests*
+plugins =
+    django_coverage_plugin
