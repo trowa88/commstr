@@ -73,6 +73,8 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     'jwt_drf.users.apps.UsersConfig',
     # Your stuff: custom apps go here
+    'building.apps.BuildingConfig',
+    'core.apps.CoreConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -264,6 +266,9 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+    'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.CursorPagination',
+    'PAGE_SIZE': 100
 }
 
 # swagger

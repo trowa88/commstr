@@ -1,3 +1,11 @@
-from django.shortcuts import render
+from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticated
 
-# Create your views here.
+from building.models import Building
+from building.serializers import BuildingSerializer
+
+
+class BuildingViewSet(viewsets.ModelViewSet):
+    serializer_class = BuildingSerializer
+    permission_classes = [IsAuthenticated]
+    queryset = Building.objects.all()

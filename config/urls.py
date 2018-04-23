@@ -6,8 +6,10 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import permissions
+from rest_framework import permissions, routers
 from rest_framework_jwt.views import obtain_jwt_token
+
+from building.views import BuildingViewSet
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -73,3 +75,10 @@ if settings.DEBUG:
         import debug_toolbar
 
         urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
+
+router = routers.SimpleRouter()
+router.register(r'building', BuildingViewSet)
+
+urlpatterns += [
+    url(r'^api/', include((router.urls, 'api'))),
+]
