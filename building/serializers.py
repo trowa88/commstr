@@ -5,8 +5,10 @@ from core.serializers import CitySerializer
 
 
 class BuildingSerializer(serializers.ModelSerializer):
-    city = CitySerializer(many=False, read_only=True)
-
     class Meta:
         model = Building
-        fields = ('name', 'city', 'address', 'img_src')
+        fields = ('id', 'city', 'name', 'address', 'img_src')
+
+
+class BuildingReadSerializer(BuildingSerializer):
+    city = CitySerializer(read_only=True)

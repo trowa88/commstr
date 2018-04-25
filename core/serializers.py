@@ -10,25 +10,21 @@ class CountrySerializer(serializers.ModelSerializer):
 
 
 class StatesSerializer(serializers.ModelSerializer):
-    country = CountrySerializer(many=False, read_only=True)
-
     class Meta:
         model = States
-        fields = ('country', 'state_code', 'state_name')
+        fields = ('state_code', 'state_name')
 
 
 class TimezoneSerializer(serializers.ModelSerializer):
-    country = CountrySerializer(many=False, read_only=True)
-
     class Meta:
         model = Timezone
-        fields = ('country', 'timezone_name', 'gmt_offset', 'dst_offset', 'raw_offset')
+        fields = ('timezone_name', 'gmt_offset', 'dst_offset', 'raw_offset')
 
 
 class CitySerializer(serializers.ModelSerializer):
-    country = CountrySerializer(many=False, read_only=True)
-    state = StatesSerializer(many=False, read_only=True)
-    timezone_name = TimezoneSerializer(many=False, read_only=True)
+    country = CountrySerializer(read_only=True)
+    state = StatesSerializer(read_only=True)
+    timezone_name = TimezoneSerializer(read_only=True)
 
     class Meta:
         model = Cities

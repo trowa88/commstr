@@ -30,7 +30,7 @@ class States(models.Model):
         db_table = 'states'
 
     def __str__(self):
-        return f'{self.state_code}: {self.state_name}'
+        return f'{self.pk}: {self.state_name}'
 
 
 class Cities(models.Model):
@@ -60,4 +60,5 @@ class Timezone(models.Model):
         db_table = 'timezone'
 
     def __str__(self):
-        return self.timezone_name
+        return f'timezone_name: {self.timezone_name}, gmt: {self.gmt_offset}, ' \
+               f'dst: {self.dst_offset}, raw: {self.raw_offset}'
