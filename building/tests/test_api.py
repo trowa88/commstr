@@ -51,15 +51,23 @@ class BuildingAPITests(APITestCase):
     def test_valid_building_create(self):
         url = self.reverse('api:building-list')
         payload = {
-            'name': '유효빌딩',
             'city': self.city.id,
-            'address': 'test_address',
-            'img_src': None
+            'name': '유효빌딩',
+            'desc': '테스트 건물입니다.',
+            'address': 'test_address'
         }
         # serializer = BuildingSerializer(payload)
-        response = self.post(url, data=payload)
+        response = self.client.post(url, data=payload, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Building.objects.all().count(), 3)
 
     def test_invalid_building_create(self):
-        pass
+        url = self.reverse('api:building-list')
+        payload = {
+            'name': '유효빌딩',
+            'address': 'test_address',
+            'img_src': None
+        }
+        # serializer = BuildingSerializer(payload)
+        response = self.client.post(url, data=payload, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
