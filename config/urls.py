@@ -6,7 +6,7 @@ from django.views.generic import TemplateView
 from django.views import defaults as default_views
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
-from rest_framework import permissions, routers
+from rest_framework import routers, permissions
 from rest_framework_jwt.views import obtain_jwt_token
 
 from building.views import BuildingViewSet
@@ -43,9 +43,8 @@ urlpatterns = [
     # Your stuff: custom urls includes go here
     # jwt auth
     url(r'^api-token-auth/', obtain_jwt_token),
-    url(r'^swagger(?P<format>\.json|\.yaml)$', schema_view.without_ui(cache_timeout=None), name='schema-json'),
     url(r'^swagger/$', schema_view.with_ui('swagger', cache_timeout=None), name='schema-swagger-ui'),
-    url(r'^redoc/$', schema_view.with_ui('redoc', cache_timeout=None), name='schema-redoc'),
+    url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ] + static(
     settings.MEDIA_URL, document_root=settings.MEDIA_ROOT
 )
@@ -80,5 +79,5 @@ router = routers.SimpleRouter()
 router.register(r'building', BuildingViewSet)
 
 urlpatterns += [
-    url(r'^api/', include((router.urls, 'api'))),
+    url(r'^building/', include('building.urls')),
 ]
