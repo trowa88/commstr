@@ -277,7 +277,12 @@ SWAGGER_SETTINGS = {
         'basic': {
             'type': 'basic'
         }
-    }
+    },
+    'USE_SESSION_AUTH': True,
+    'DOC_EXPANSION': 'list',
+    'SHOW_REQUEST_HEADERS': True,
+    'LOGIN_URL': 'rest_framework:login',
+    'LOGOUT_URL': 'rest_framework:logout'
 }
 
 REDOC_SETTINGS = {
