@@ -6,6 +6,7 @@ from building import views
 
 router = SimpleRouter()
 router.register('', views.BuildingViewSet)
+router.register('post', views.BuildingPostViewSet)
 
 urlpatterns = [
     url(r'^', include(router.urls))

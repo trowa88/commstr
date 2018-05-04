@@ -1,10 +1,8 @@
-import coreapi
-from rest_framework import viewsets, status
-from rest_framework.parsers import MultiPartParser, JSONParser
-from rest_framework.response import Response
+from rest_framework import viewsets
+from rest_framework.parsers import JSONParser, MultiPartParser
 
-from building.models import Building
-from building.serializers import BuildingSerializer, BuildingReadSerializer
+from building.models import Building, BuildingPost
+from building.serializers import BuildingSerializer, BuildingReadSerializer, BuildingPostSerializer
 
 
 class BuildingViewSet(viewsets.ModelViewSet):
@@ -18,7 +16,15 @@ class BuildingViewSet(viewsets.ModelViewSet):
             return BuildingReadSerializer
         return BuildingSerializer
 
-    def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
+    def perform_destroy(self, instance):
         instance.is_enabled = False
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        instance.save()
+
+
+class BuildingPostViewSet(viewsets.ModelViewSet):
+    serializer_class = BuildingPostSerializer
+    queryset = BuildingPost.objects.filter(is_enabled=True)
+
+    def perform_destroy(self, instance):
+        instance.is_enabled = False
+        instance.save()
