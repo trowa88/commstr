@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.relations import StringRelatedField
 
 from core.models import Country, States, Cities, Timezone
 
@@ -22,9 +23,9 @@ class TimezoneSerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
-    country = CountrySerializer(read_only=True)
-    state = StatesSerializer(read_only=True)
-    timezone_name = TimezoneSerializer(read_only=True)
+    country = StringRelatedField(read_only=True)
+    state = StringRelatedField(read_only=True)
+    timezone_name = StringRelatedField(read_only=True)
 
     class Meta:
         model = Cities
