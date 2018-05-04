@@ -42,6 +42,7 @@ class BuildingAPITests(APITestCase):
         serializer = BuildingReadSerializer(self.building1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
+        self.assertTrue(response.data['is_enabled'])
 
     def test_building_detail_not_exists(self):
         url = self.reverse('api:building-detail', pk=5)
@@ -71,3 +72,11 @@ class BuildingAPITests(APITestCase):
         # serializer = BuildingSerializer(payload)
         response = self.client.post(url, data=payload, format='multipart')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_disabled_building(self):
+        url = self.reverse('api:building-detail', pk=self.building1.id)
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
