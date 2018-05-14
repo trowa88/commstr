@@ -80,3 +80,8 @@ class BuildingAPITests(APITestCase):
 
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+
+class BuildingPostAPITests(APITestCase):
+    def setUp(self):
+        pass
