@@ -79,5 +79,6 @@ router = routers.SimpleRouter()
 router.register(r'building', BuildingViewSet)
 
 urlpatterns += [
-    url(r'^building/', include('building.urls')),
+    url(r'^api/building/', include('building.urls')),
+    url(r'^api/building_post/', include('building_post.urls')),
 ]

@@ -1,7 +1,6 @@
 from rest_framework import serializers
-from rest_framework.relations import StringRelatedField
 
-from building.models import Building, BuildingPost
+from building.models import Building
 from core.serializers import CitySerializer
 
 
@@ -25,11 +24,3 @@ class BuildingReadSerializer(BuildingSerializer):
             'id', 'slug', 'city', 'name', 'desc', 'address', 'img_src',
             'created', 'updated'
         )
-
-
-class BuildingPostSerializer(serializers.ModelSerializer):
-    creator = StringRelatedField()
-
-    class Meta:
-        model = BuildingPost
-        fields = ('building', 'creator', 'title', 'content', 'created', 'updated')

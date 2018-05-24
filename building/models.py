@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils.text import slugify
 
 from core.models import TimeStampedEnabledModel, Cities
 
@@ -18,16 +19,6 @@ class Building(TimeStampedEnabledModel):
     def __str__(self):
         return self.name
 
-
-class BuildingPost(TimeStampedEnabledModel):
-    building = models.ForeignKey(Building, on_delete=models.DO_NOTHING, null=False)
-    creator = models.ForeignKey('users.User', on_delete=models.DO_NOTHING, null=False)
-    title = models.CharField(max_length=100)
-    content = models.TextField()
-
-    class Meta:
-        db_table = 'building_post'
-        ordering = ['-updated']
-
-    def __str__(self):
-        return self.title
+    def save(self, force_insert=False, force_update=False, using=None,
+             update_fields=None):
+        self.slug = slugify(self.name)
