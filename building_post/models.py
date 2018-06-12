@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils.text import slugify
 
 from building.models import Building
 from core.models import TimeStampedEnabledModel
@@ -8,7 +7,6 @@ from core.models import TimeStampedEnabledModel
 class BuildingPost(TimeStampedEnabledModel):
     building = models.ForeignKey(Building, on_delete=models.DO_NOTHING, null=False)
     creator = models.ForeignKey('users.User', on_delete=models.DO_NOTHING, null=False)
-    slug = models.SlugField(unique=True, blank=True)
     title = models.CharField(max_length=100)
     content = models.TextField()
 
@@ -18,7 +16,3 @@ class BuildingPost(TimeStampedEnabledModel):
 
     def __str__(self):
         return self.title
-
-    def save(self, force_insert=False, force_update=False, using=None,
-             update_fields=None):
-        self.slug = slugify(self.title)

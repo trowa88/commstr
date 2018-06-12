@@ -5,15 +5,13 @@ from core.serializers import CitySerializer
 
 
 class BuildingSerializer(serializers.ModelSerializer):
-    img_src = serializers.ImageField(read_only=False)
+    img_src = serializers.ImageField(use_url=True, required=False)
+    creator = serializers.StringRelatedField(read_only=True)
 
     class Meta:
         model = Building
-        fields = ('slug', 'city', 'name', 'desc', 'address', 'img_src')
+        fields = ('city', 'name', 'desc', 'address', 'img_src', 'creator',)
         read_only_fields = ('is_enabled',)
-
-    def to_internal_value(self, data):
-        pass
 
 
 class BuildingReadSerializer(BuildingSerializer):
@@ -21,6 +19,7 @@ class BuildingReadSerializer(BuildingSerializer):
 
     class Meta(BuildingSerializer.Meta):
         fields = (
-            'id', 'slug', 'city', 'name', 'desc', 'address', 'img_src',
-            'created', 'updated'
+            'id', 'city', 'name', 'desc', 'address', 'img_src',
+            'is_enabled', 'creator',
+            'created', 'updated',
         )

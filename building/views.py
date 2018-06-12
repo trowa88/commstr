@@ -16,6 +16,9 @@ class BuildingViewSet(viewsets.ModelViewSet):
             return BuildingReadSerializer
         return BuildingSerializer
 
+    def perform_create(self, serializer):
+        serializer.save(creator=self.request.user)
+
     def perform_destroy(self, instance):
         instance.is_enabled = False
         instance.save()
