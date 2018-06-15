@@ -8,7 +8,7 @@ class AbstractBuilding(TimeStampedEnabledModel):
     name = models.CharField(max_length=50)
     desc = models.CharField(max_length=100, blank=True)
     address = models.CharField(max_length=50)
-    img_src = models.ImageField(upload_to='buildings/', default=None)
+    img_src = models.ImageField(upload_to='buildings/', default=None, null=True)
     creator = models.ForeignKey('users.User', on_delete=models.DO_NOTHING, null=False,
                                 default=None)
 
@@ -27,6 +27,7 @@ class Building(AbstractBuilding):
 
 class BuildingHistory(AbstractBuilding):
     building = models.ForeignKey(Building, on_delete=models.DO_NOTHING, null=False)
+    img_src = models.ImageField(upload_to='buildings/history/', default=None, null=True)
 
     class Meta:
         db_table = 'building_history'

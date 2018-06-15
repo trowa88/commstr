@@ -4,7 +4,7 @@ from PIL import Image
 from rest_framework import status
 from test_plus import APITestCase
 
-from building.models import Building
+from building.models import Building, BuildingHistory
 from building.serializers import BuildingReadSerializer
 from core.models import Cities, Country, States, Timezone
 
@@ -108,3 +108,25 @@ class BuildingAPITests(APITestCase):
 
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_building_valid_payload(self):
+        url = self.reverse('building-detail', pk=self.client.building1.id)
+        updated_name = '빌딩 이름 수정되었어요'
+        updated_address = '주소도 수정되었습니다'
+        payload = {
+            'name': updated_name,
+            'address': updated_address
+        }
+        response = self.client.patch(url, data=payload, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, updated_name)
+        self.assertContains(response, updated_address)
+        self.assertEqual(1, BuildingHistory.objects.count())
+
+    def test_update_building_invalid_payload(self):
+        url = self.reverse('building-detail', pk=self.client.building1.id)
+        payload = {
+            'name': generate_photo_file()
+        }
+        response = self.client.patch(url, data=payload, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
