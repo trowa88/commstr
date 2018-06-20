@@ -75,6 +75,7 @@ LOCAL_APPS = [
     # Your stuff: custom apps go here
     'building.apps.BuildingConfig',
     'core.apps.CoreConfig',
+    'building_post.apps.BuildingPostConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
@@ -268,6 +269,7 @@ REST_FRAMEWORK = {
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'COERCE_DECIMAL_TO_STRING': False,
     'PAGE_SIZE': 100
 }
 

@@ -23,9 +23,9 @@ class TimezoneSerializer(serializers.ModelSerializer):
 
 
 class CitySerializer(serializers.ModelSerializer):
-    country = StringRelatedField(read_only=True)
-    state = StringRelatedField(read_only=True)
-    timezone_name = StringRelatedField(read_only=True)
+    country = CountrySerializer(read_only=True)
+    state = StatesSerializer(read_only=True)
+    timezone_name = TimezoneSerializer(read_only=True)
 
     class Meta:
         model = Cities
