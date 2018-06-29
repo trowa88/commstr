@@ -10,7 +10,7 @@ class BuildingSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Building
-        fields = ('city', 'name', 'desc', 'address', 'img_src', 'creator',)
+        fields = ('city', 'name', 'desc', 'address', 'img_src', 'creator')
         read_only_fields = ('is_enabled',)
 
     def update(self, instance, validated_data):
@@ -33,8 +33,7 @@ class BuildingReadSerializer(BuildingSerializer):
     class Meta(BuildingSerializer.Meta):
         fields = (
             'id', 'city', 'name', 'desc', 'address', 'img_src',
-            'is_enabled', 'creator',
-            'created', 'updated',
+            'is_enabled', 'creator', 'created', 'updated'
         )
 
 
@@ -43,5 +42,5 @@ class BuildingHistorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BuildingHistory
-        fields = ('building', 'city', 'name', 'desc', 'address', 'img_src', 'creator',)
+        fields = ('building', 'city', 'name', 'desc', 'address', 'img_src', 'creator')
         read_only_fields = ('is_enabled',)
