@@ -1,7 +1,8 @@
 from rest_framework import serializers
 from rest_framework.relations import StringRelatedField
 
-from building_post.models import BuildingPost
+from building.serializers import BuildingSerializer
+from building_post.models import BuildingPost, BuildingPostHistory
 
 
 class BuildingPostSerializer(serializers.ModelSerializer):
@@ -9,4 +10,22 @@ class BuildingPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BuildingPost
-        fields = ('building', 'creator', 'title', 'content', 'created', 'updated')
+        fields = ( 'building', 'creator', 'title', 'content')
+
+    def update(self, instance, validated_data):
+        new_instance = super(BuildingPostSerializer, self).update(instance, validated_data)
+        BuildingPostHistory.objects.create(
+            building_post=instance,
+            building=instance.building,
+            creator=instance.creator,
+            title=instance.title,
+            content=instance.content
+        )
+        return new_instance
+
+
+class BuildingPostReadSerializer(BuildingPostSerializer):
+    building = BuildingSerializer(many=False)
+
+    class Meta(BuildingPostSerializer.Meta):
+        fields = ('id', 'building', 'creator', 'title', 'content', 'created', 'updated')
