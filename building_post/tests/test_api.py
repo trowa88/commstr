@@ -3,6 +3,7 @@ from test_plus import APITestCase
 
 from building.models import Building
 from building_post.models import BuildingPost
+from building_post.serializers import BuildingPostReadSerializer
 from core.models import Country, States, Timezone, Cities
 
 
@@ -78,3 +79,16 @@ class BuildingPostAPITests(APITestCase):
         }
         response = self.post(url, data=payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_post_detail(self):
+        url = self.reverse('posts-detail', pk=self.client.building_post1.pk)
+        response = self.get(url)
+        serializer = BuildingPostReadSerializer(self.client.building_post1)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data, serializer.data)
+        self.assertTrue(response.data['is_enabled'])
+
+    def test_post_detail_not_exists(self):
+        url = self.reverse('posts-detail', pk=494949)
+        response = self.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

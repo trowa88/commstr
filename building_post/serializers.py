@@ -28,4 +28,4 @@ class BuildingPostReadSerializer(BuildingPostSerializer):
     building = BuildingSerializer(many=False)
 
     class Meta(BuildingPostSerializer.Meta):
-        fields = ('id', 'building', 'creator', 'title', 'content', 'created', 'updated')
+        fields = ('id', 'building', 'creator', 'title', 'content', 'is_enabled', 'created', 'updated')
