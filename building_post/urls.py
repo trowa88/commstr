@@ -5,7 +5,7 @@ from rest_framework.routers import SimpleRouter
 from building_post import views
 
 router = SimpleRouter()
-router.register('', views.BuildingPostViewSet)
+router.register('', views.BuildingPostViewSet, base_name='posts')
 
 urlpatterns = [
     url(r'^', include(router.urls))
