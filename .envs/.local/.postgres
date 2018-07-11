@@ -1,0 +1,5 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_DB=docker_test
+POSTGRES_USER=SsqboAgCPcxQWtAuUufRJPYvkEiCMwZs
+POSTGRES_PASSWORD=US5zhp2Yykh4y5BJWrUfDGnzgnfh1tX352y0NaCp0EdpeQuHzZbRnTqPDaZzIKpR
