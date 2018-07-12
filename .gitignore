@@ -345,3 +345,4 @@ jwt_drf/media/
 .env
 .envs/*
 !.envs/.local/
+compose/production/
