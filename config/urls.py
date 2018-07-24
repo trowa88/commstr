@@ -8,8 +8,8 @@ from django.views.generic import TemplateView
 from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
-from rest_framework.routers import SimpleRouter
 from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_nested import routers
 
 from building.views import BuildingViewSet
 from building_post.views import BuildingPostViewSet
@@ -75,10 +75,13 @@ if settings.DEBUG:
 
         urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
-router = SimpleRouter()
-router.register('buildings', BuildingViewSet)
-router.register('posts', BuildingPostViewSet)
+router = routers.SimpleRouter()
+router.register(r'buildings', BuildingViewSet)
+
+building_router = routers.NestedSimpleRouter(router, r'buildings', lookup='building')
+building_router.register(r'posts', BuildingPostViewSet, base_name='building-posts')
 
 urlpatterns += [
     path('api/', include(router.urls)),
+    path('api/', include(building_router.urls)),
 ]
