@@ -69,6 +69,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'drf_yasg',
+    'rest_framework_nested',
 ]
 LOCAL_APPS = [
     'jwt_drf.users.apps.UsersConfig',
