@@ -40,7 +40,7 @@ class BuildingPostAPITests(APITestCase):
                                                                            creator=self.client.user)
 
     def test_building_post_list(self):
-        url = self.reverse('building-posts', pk=self.client.building1.pk)
+        url = self.reverse('building-posts-list', building_pk=self.client.building1.pk)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(1, BuildingPost.objects
@@ -51,18 +51,8 @@ class BuildingPostAPITests(APITestCase):
         self.assertNotContains(response, '킨텍스 게시물')
         self.assertNotContains(response, '안녕하세요 킨텍스 여러분')
 
-    def test_post_list(self):
-        url = self.reverse('posts-list')
-        response = self.get(url)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(2, BuildingPost.objects.filter(is_enabled=True).count())
-        self.assertContains(response, '스타필드 게시물')
-        self.assertContains(response, '안녕하세요 스타필드 여러분')
-        self.assertContains(response, '킨텍스 게시물')
-        self.assertContains(response, '안녕하세요 킨텍스 여러분')
-
     def test_valid_post_create(self):
-        url = self.reverse('posts-list')
+        url = self.reverse('building-posts-list', building_pk=self.client.building1.pk)
         payload = {
             'building': self.client.building1.pk,
             'title': '테스트건물 제목',
@@ -72,7 +62,7 @@ class BuildingPostAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_invalid_post_create(self):
-        url = self.reverse('posts-list')
+        url = self.reverse('building-posts-list', building_pk=self.client.building1.pk)
         payload = {
             'building': 10983,
             'title': '비정상 제목'
@@ -81,7 +71,11 @@ class BuildingPostAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_post_detail(self):
-        url = self.reverse('posts-detail', pk=self.client.building_post1.pk)
+        url = self.reverse(
+            'building-posts-detail',
+            building_pk=self.client.building_post1.pk,
+            pk=self.client.building_post1.pk
+        )
         response = self.get(url)
         serializer = BuildingPostReadSerializer(self.client.building_post1)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
@@ -89,6 +83,6 @@ class BuildingPostAPITests(APITestCase):
         self.assertTrue(response.data['is_enabled'])
 
     def test_post_detail_not_exists(self):
-        url = self.reverse('posts-detail', pk=494949)
+        url = self.reverse('building-posts-detail', building_pk=1, pk=595959)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)

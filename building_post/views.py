@@ -6,7 +6,12 @@ from building_post.serializers import BuildingPostSerializer, BuildingPostReadSe
 
 class BuildingPostViewSet(viewsets.ModelViewSet):
     serializer_class = BuildingPostSerializer
-    queryset = BuildingPost.objects.filter(is_enabled=True)
+
+    def get_queryset(self):
+        return BuildingPost.objects.filter(
+            is_enabled=True,
+            building=self.kwargs['building_pk']
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
