@@ -14,7 +14,7 @@ class BuildingPostSerializer(serializers.ModelSerializer):
             'building',
             'creator',
             'title',
-            'content'
+            'content',
         )
 
     def update(self, instance, validated_data):
@@ -41,5 +41,5 @@ class BuildingPostReadSerializer(BuildingPostSerializer):
             'content',
             'is_enabled',
             'created',
-            'updated'
+            'updated',
         )

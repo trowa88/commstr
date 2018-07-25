@@ -1,6 +1,5 @@
 from django.db import models
 
-from building.models import Building
 from core.models import TimeStampedEnabledModel
 
 

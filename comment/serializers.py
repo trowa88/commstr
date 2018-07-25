@@ -29,5 +29,5 @@ class BuildingPostCommentReadSerializer(BuildingPostCommentSerializer):
             'creator',
             'content',
             'created',
-            'updated'
+            'updated',
         )

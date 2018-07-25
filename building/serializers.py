@@ -16,7 +16,7 @@ class BuildingSerializer(serializers.ModelSerializer):
             'desc',
             'address',
             'img_src',
-            'creator'
+            'creator',
         )
         read_only_fields = (
             'is_enabled',
@@ -50,7 +50,7 @@ class BuildingReadSerializer(BuildingSerializer):
             'is_enabled',
             'creator',
             'created',
-            'updated'
+            'updated',
         )
 
 
@@ -66,7 +66,7 @@ class BuildingHistorySerializer(serializers.ModelSerializer):
             'desc',
             'address',
             'img_src',
-            'creator'
+            'creator',
         )
         read_only_fields = (
             'is_enabled',
