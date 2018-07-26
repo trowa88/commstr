@@ -2,7 +2,6 @@ from rest_framework import status
 from rest_framework.test import APIRequestFactory
 from test_plus import APITestCase
 
-from building.tests.factories import BuildingFactory
 from building_post.models import BuildingPost
 from building_post.serializers import BuildingPostReadSerializer
 from building_post.tests.factories import BuildingPostFactory
