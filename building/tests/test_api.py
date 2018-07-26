@@ -1,5 +1,4 @@
 import io
-
 from PIL import Image
 from rest_framework import status
 from rest_framework.test import APIRequestFactory
@@ -8,8 +7,7 @@ from test_plus import APITestCase
 from building.models import Building, BuildingHistory
 from building.serializers import BuildingReadSerializer
 from building.tests.factories import BuildingFactory
-from core.models import Cities, Country, States, Timezone
-from core.tests.factories import CountryFactory, StatesFactory, TimezoneFactory, CitiesFactory
+from core.tests.factories import CitiesFactory
 
 
 def generate_photo_file():
