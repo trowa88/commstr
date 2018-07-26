@@ -4,7 +4,6 @@ from core.models import TimeStampedEnabledModel
 
 
 class AbstractBuildingPostComment(TimeStampedEnabledModel):
-    building = models.ForeignKey('building.Building', on_delete=models.DO_NOTHING, null=False)
     building_post = models.ForeignKey('building_post.BuildingPost', on_delete=models.DO_NOTHING, null=False)
     creator = models.ForeignKey('users.User', on_delete=models.DO_NOTHING, null=False)
     content = models.CharField(max_length=500)
