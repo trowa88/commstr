@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import StringRelatedField
 
 from building.serializers import BuildingSerializer
@@ -18,6 +19,8 @@ class BuildingPostSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        if self.context['request'].user != instance.creator:
+            raise PermissionDenied()
         new_instance = super(BuildingPostSerializer, self).update(instance, validated_data)
         BuildingPostHistory.objects.create(
             building_post=instance,

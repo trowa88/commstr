@@ -97,8 +97,21 @@ class BuildingAPITests(APITestCase):
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_building_valid_payload(self):
+    def test_update_building_valid_payload_not_have_permission(self):
         building = BuildingFactory()
+        url = self.reverse('buildings-detail', pk=building.id)
+        updated_name = '빌딩 이름 수정되었어요'
+        updated_address = '주소도 수정되었습니다'
+        payload = {
+            'name': updated_name,
+            'address': updated_address
+        }
+        response = self.client.patch(url, data=payload, format='multipart')
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_building_valid_payload_have_permission(self):
+        building = BuildingFactory()
+        self.client.force_authenticate(user=building.creator)
         url = self.reverse('buildings-detail', pk=building.id)
         updated_name = '빌딩 이름 수정되었어요'
         updated_address = '주소도 수정되었습니다'

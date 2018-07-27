@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 
 from comment.models import BuildingPostComment, BuildingPostCommentHistory
 
@@ -12,6 +13,8 @@ class BuildingPostCommentSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        if self.context['request'].user != instance.creator:
+            raise PermissionDenied()
         new_instance = super(BuildingPostCommentSerializer, self).update(instance, validated_data)
         BuildingPostCommentHistory.objects.create(
             building_post_comment=instance,
