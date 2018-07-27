@@ -83,8 +83,24 @@ class BuildingPostCommentAPITests(APITestCase):
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_building_post_comment(self):
+    def test_update_building_post_comment_not_have_permission(self):
         building_post_comment = BuildingPostCommentFactory()
+        url = self.reverse(
+            'building-post-comments-detail',
+            building_pk=building_post_comment.building_post.building_id,
+            post_pk=building_post_comment.building_post_id,
+            pk=building_post_comment.id,
+        )
+        updated_content = 'modify content'
+        payload = {
+            'content': updated_content,
+        }
+        response = self.patch(url, data=payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_building_post_comment_have_permission(self):
+        building_post_comment = BuildingPostCommentFactory()
+        self.client.force_authenticate(user=building_post_comment.creator)
         url = self.reverse(
             'building-post-comments-detail',
             building_pk=building_post_comment.building_post.building_id,

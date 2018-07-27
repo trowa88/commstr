@@ -1,3 +1,4 @@
+from django.core.exceptions import PermissionDenied
 from rest_framework import serializers
 
 from building.models import Building, BuildingHistory
@@ -23,6 +24,8 @@ class BuildingSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        if self.context['request'].user != instance.creator:
+            raise PermissionDenied()
         new_instance = super(BuildingSerializer, self).update(instance, validated_data)
         BuildingHistory.objects.create(
             building=instance,

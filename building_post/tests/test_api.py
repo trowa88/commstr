@@ -63,8 +63,25 @@ class BuildingPostAPITests(APITestCase):
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
-    def test_update_post_valid_payload(self):
+    def test_update_post_valid_payload_not_have_permission(self):
         building_post = BuildingPostFactory()
+        update_title = 'modify titlie'
+        update_content = 'modify content'
+        payload = {
+            'title': update_title,
+            'content': update_content,
+        }
+        url = self.reverse(
+            'building-posts-detail',
+            building_pk=building_post.building_id,
+            pk=building_post.id,
+        )
+        response = self.patch(url, data=payload)
+        self.assertEqual(response.status_code, status.HTTP_403_FORBIDDEN)
+
+    def test_update_post_valid_payload_have_permission(self):
+        building_post = BuildingPostFactory()
+        self.client.force_authenticate(user=building_post.creator)
         update_title = 'modify titlie'
         update_content = 'modify content'
         payload = {

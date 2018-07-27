@@ -1,7 +1,8 @@
 jwt_drf
 =======
 
-Behold My Awesome Project!
+Django Rest Framework를 이용한
+API 서버
 
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
      :target: https://github.com/pydanny/cookiecutter-django/
