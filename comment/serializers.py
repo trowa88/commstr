@@ -6,13 +6,15 @@ from comment.models import BuildingPostComment, BuildingPostCommentHistory
 class BuildingPostCommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = BuildingPostComment
-        fields = ('building', 'building_post', 'content')
+        fields = (
+            'building_post',
+            'content',
+        )
 
     def update(self, instance, validated_data):
         new_instance = super(BuildingPostCommentSerializer, self).update(instance, validated_data)
         BuildingPostCommentHistory.objects.create(
             building_post_comment=instance,
-            building=instance.building,
             building_post=instance.building_post,
             creator=instance.creator,
             content=instance.content
@@ -24,10 +26,10 @@ class BuildingPostCommentReadSerializer(BuildingPostCommentSerializer):
     class Meta(BuildingPostCommentSerializer.Meta):
         fields = (
             'id',
-            'building',
             'building_post',
             'creator',
             'content',
             'created',
             'updated',
+            'is_enabled',
         )

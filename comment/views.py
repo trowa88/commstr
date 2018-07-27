@@ -1,4 +1,3 @@
-from django.shortcuts import render
 from rest_framework import viewsets
 
 from comment.models import BuildingPostComment
@@ -7,7 +6,12 @@ from comment.serializers import BuildingPostCommentSerializer, BuildingPostComme
 
 class BuildingPostCommentViewSet(viewsets.ModelViewSet):
     serializer_class = BuildingPostCommentSerializer
-    queryset = BuildingPostComment.objects.filter(is_enabled=True)
+
+    def get_queryset(self):
+        return BuildingPostComment.objects.filter(
+            is_enabled=True,
+            building_post=self.kwargs['post_pk']
+        )
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
