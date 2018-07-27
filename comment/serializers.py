@@ -31,4 +31,5 @@ class BuildingPostCommentReadSerializer(BuildingPostCommentSerializer):
             'content',
             'created',
             'updated',
+            'is_enabled',
         )

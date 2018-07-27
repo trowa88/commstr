@@ -38,7 +38,7 @@ class BuildingPostAPITests(APITestCase):
         url = self.reverse('building-posts-list', building_pk=building_post.building_id)
         payload = {
             'building': 30000,
-            'title': '비정상 제목'
+            'title': '비정상 제목',
         }
         response = self.post(url, data=payload)
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
@@ -48,7 +48,7 @@ class BuildingPostAPITests(APITestCase):
         url = self.reverse(
             'building-posts-detail',
             building_pk=building_post.building_id,
-            pk=building_post.id
+            pk=building_post.id,
         )
         request = self.factory.get(url)
         response = self.get(url)
@@ -62,3 +62,35 @@ class BuildingPostAPITests(APITestCase):
         url = self.reverse('building-posts-detail', building_pk=building_post.building_id, pk=-1)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_update_post_valid_payload(self):
+        building_post = BuildingPostFactory()
+        update_title = 'modify titlie'
+        update_content = 'modify content'
+        payload = {
+            'title': update_title,
+            'content': update_content,
+        }
+        url = self.reverse(
+            'building-posts-detail',
+            building_pk=building_post.building_id,
+            pk=building_post.id,
+        )
+        response = self.patch(url, data=payload)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertContains(response, update_title)
+        self.assertContains(response, update_content)
+
+    def test_disabled_building_post(self):
+        building_post = BuildingPostFactory()
+        url = self.reverse(
+            'building-posts-detail',
+            building_pk=building_post.building_id,
+            pk=building_post.id,
+        )
+        response = self.delete(url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        self.assertEqual(
+            self.get(url).status_code,
+            status.HTTP_404_NOT_FOUND
+        )
