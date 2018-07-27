@@ -69,6 +69,7 @@ THIRD_PARTY_APPS = [
     'allauth.socialaccount',
     'rest_framework',
     'drf_yasg',
+    'rest_framework_nested',
 ]
 LOCAL_APPS = [
     'jwt_drf.users.apps.UsersConfig',
@@ -76,6 +77,7 @@ LOCAL_APPS = [
     'building.apps.BuildingConfig',
     'core.apps.CoreConfig',
     'building_post.apps.BuildingPostConfig',
+    'comment.apps.CommentConfig',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#installed-apps
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS

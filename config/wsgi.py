@@ -13,9 +13,9 @@ middleware here, or combine a Django application with an application of another
 framework.
 
 """
-import os
 import sys
 
+import os
 from django.core.wsgi import get_wsgi_application
 
 # This allows easy placement of apps within the interior

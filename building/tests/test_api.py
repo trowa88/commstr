@@ -1,12 +1,13 @@
 import io
-
 from PIL import Image
 from rest_framework import status
+from rest_framework.test import APIRequestFactory
 from test_plus import APITestCase
 
 from building.models import Building, BuildingHistory
 from building.serializers import BuildingReadSerializer
-from core.models import Cities, Country, States, Timezone
+from building.tests.factories import BuildingFactory
+from core.tests.factories import CitiesFactory
 
 
 def generate_photo_file():
@@ -21,54 +22,39 @@ def generate_photo_file():
 class BuildingAPITests(APITestCase):
     def setUp(self):
         self.client.user = self.make_user()
-        self.client.country = Country.objects.create(country_code='KR', country_name='대한민국')
-        self.client.state = States.objects.create(country=self.client.country, state_code='KK', state_name='경기도')
-        self.client.timezone = Timezone.objects.create(country=self.client.country, timezone_name='Asia/Seoul',
-                                                       gmt_offset=9, dst_offset=9, raw_offset=9)
-        self.client.city = Cities.objects.create(country=self.client.country, state=self.client.state, city_name='고양',
-                                                 city_name_ascii='goyang',
-                                                 latitude=245,
-                                                 longitude=281,
-                                                 timezone_name=self.client.timezone)
-        self.client.building1, _ = Building.objects.get_or_create(name='스타필드', city=self.client.city,
-                                                                  address='덕양구 창릉동 고양대로 1955',
-                                                                  creator=self.client.user)
-        self.client.building2, _ = Building.objects.get_or_create(name='킨텍스', city=self.client.city,
-                                                                  address='일산서구 대화동 킨텍스로 217-59',
-                                                                  creator=self.client.user)
-        self.client.jwt_response = self.post('/api-token-auth/',
-                                             data={'username': 'testuser',
-                                                   'password': 'password'})
-
-        self.client.credentials(HTTP_AUTHORIZATION=f'JWT {self.client.jwt_response.data["token"]}')
+        self.client.force_authenticate(user=self.client.user)
+        self.factory = APIRequestFactory()
 
     def test_building_list(self):
-        url = self.reverse('building-list')
+        building1 = BuildingFactory()
+        building2 = BuildingFactory()
+        url = self.reverse('buildings-list')
         response = self.get(url)
-        self.assertContains(response, '스타필드')
-        self.assertContains(response, '킨텍스')
-        self.assertContains(response, '경기도')
-        self.assertContains(response, '고양')
-        self.assertContains(response, 'Asia/Seoul')
-        self.assertContains(response, 'goyang')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['count'], Building.objects.filter(is_enabled=True).count())
+        self.assertContains(response, building1.name)
+        self.assertContains(response, building2.name)
 
     def test_building_detail(self):
-        url = self.reverse('building-detail', pk=1)
+        building = BuildingFactory()
+        url = self.reverse('buildings-detail', pk=1)
+        request = self.factory.get(url)
         response = self.get(url)
-        serializer = BuildingReadSerializer(self.client.building1)
+        serializer = BuildingReadSerializer(building, context={'request': request})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data, serializer.data)
         self.assertTrue(response.data['is_enabled'])
 
     def test_building_detail_not_exists(self):
-        url = self.reverse('building-detail', pk=5)
+        url = self.reverse('buildings-detail', pk=5)
         response = self.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_valid_building_create(self):
-        url = self.reverse('building-list')
+        city = CitiesFactory()
+        url = self.reverse('buildings-list')
         payload = {
-            'city': self.client.city.id,
+            'city': city.id,
             'name': '유효빌딩',
             'desc': '테스트 건물입니다.',
             'address': 'test_address'
@@ -79,20 +65,21 @@ class BuildingAPITests(APITestCase):
         self.assertEqual(response.data['creator'], 'testuser')
 
     def test_valid_building_create_with_image(self):
-        url = self.reverse('building-list')
+        city = CitiesFactory()
+        url = self.reverse('buildings-list')
         payload = {
-            'city': self.client.city.id,
+            'city': city.id,
             'name': '유효빌딩',
             'desc': '테스트 건물입니다.',
             'address': 'test_address',
             'img_src': generate_photo_file()
         }
         # serializer = BuildingSerializer(payload)
-        response = self.client.post(url, data=payload, format='multipart')
+        response = self.post(url, data=payload, extra={'format': 'multipart'})
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
     def test_invalid_building_create(self):
-        url = self.reverse('building-list')
+        url = self.reverse('buildings-list')
         payload = {
             'name': '유효빌딩',
             'address': 'test_address'
@@ -102,7 +89,8 @@ class BuildingAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
 
     def test_disabled_building(self):
-        url = self.reverse('building-detail', pk=self.client.building1.id)
+        building = BuildingFactory()
+        url = self.reverse('buildings-detail', pk=building.id)
         response = self.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
@@ -110,7 +98,8 @@ class BuildingAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
     def test_update_building_valid_payload(self):
-        url = self.reverse('building-detail', pk=self.client.building1.id)
+        building = BuildingFactory()
+        url = self.reverse('buildings-detail', pk=building.id)
         updated_name = '빌딩 이름 수정되었어요'
         updated_address = '주소도 수정되었습니다'
         payload = {
@@ -121,10 +110,11 @@ class BuildingAPITests(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertContains(response, updated_name)
         self.assertContains(response, updated_address)
-        self.assertEqual(1, BuildingHistory.objects.count())
+        self.assertEqual(1, BuildingHistory.objects.filter(is_enabled=True).count())
 
     def test_update_building_invalid_payload(self):
-        url = self.reverse('building-detail', pk=self.client.building1.id)
+        building = BuildingFactory()
+        url = self.reverse('buildings-detail', pk=building.id)
         payload = {
             'name': generate_photo_file()
         }

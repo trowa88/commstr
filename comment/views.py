@@ -1,22 +1,22 @@
 from rest_framework import viewsets
 
-from building_post.models import BuildingPost
-from building_post.serializers import BuildingPostSerializer, BuildingPostReadSerializer
+from comment.models import BuildingPostComment
+from comment.serializers import BuildingPostCommentSerializer, BuildingPostCommentReadSerializer
 
 
-class BuildingPostViewSet(viewsets.ModelViewSet):
-    serializer_class = BuildingPostSerializer
+class BuildingPostCommentViewSet(viewsets.ModelViewSet):
+    serializer_class = BuildingPostCommentSerializer
 
     def get_queryset(self):
-        return BuildingPost.objects.filter(
+        return BuildingPostComment.objects.filter(
             is_enabled=True,
-            building=self.kwargs['building_pk']
+            building_post=self.kwargs['post_pk']
         )
 
     def get_serializer_class(self):
         if self.request.method == 'GET':
-            return BuildingPostReadSerializer
-        return BuildingPostSerializer
+            return BuildingPostCommentReadSerializer
+        return BuildingPostCommentSerializer
 
     def perform_create(self, serializer):
         serializer.save(creator=self.request.user)

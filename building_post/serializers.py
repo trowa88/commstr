@@ -10,7 +10,12 @@ class BuildingPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = BuildingPost
-        fields = ( 'building', 'creator', 'title', 'content')
+        fields = (
+            'building',
+            'creator',
+            'title',
+            'content',
+        )
 
     def update(self, instance, validated_data):
         new_instance = super(BuildingPostSerializer, self).update(instance, validated_data)
@@ -28,4 +33,13 @@ class BuildingPostReadSerializer(BuildingPostSerializer):
     building = BuildingSerializer(many=False)
 
     class Meta(BuildingPostSerializer.Meta):
-        fields = ('id', 'building', 'creator', 'title', 'content', 'is_enabled', 'created', 'updated')
+        fields = (
+            'id',
+            'building',
+            'creator',
+            'title',
+            'content',
+            'is_enabled',
+            'created',
+            'updated',
+        )

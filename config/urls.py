@@ -9,6 +9,11 @@ from drf_yasg import openapi
 from drf_yasg.views import get_schema_view
 from rest_framework import permissions
 from rest_framework_jwt.views import obtain_jwt_token
+from rest_framework_nested import routers
+
+from building.views import BuildingViewSet
+from building_post.views import BuildingPostViewSet
+from comment.views import BuildingPostCommentViewSet
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -71,7 +76,18 @@ if settings.DEBUG:
 
         urlpatterns = [url(r"^__debug__/", include(debug_toolbar.urls))] + urlpatterns
 
+# API router
+router = routers.DefaultRouter()
+router.register(r'buildings', BuildingViewSet, base_name='buildings')
+
+building_router = routers.NestedSimpleRouter(router, r'buildings', lookup='building')
+building_router.register(r'posts', BuildingPostViewSet, base_name='building-posts')
+
+building_post_router = routers.NestedSimpleRouter(building_router, r'posts', lookup='post')
+building_post_router.register(r'comments', BuildingPostCommentViewSet, base_name='building-post-comments')
+
 urlpatterns += [
-    url(r'^buildings/', include('building.urls')),
-    path('posts/', include('building_post.urls')),
+    path('api/', include(router.urls)),
+    path('api/', include(building_router.urls)),
+    path('api/', include(building_post_router.urls)),
 ]
