@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from rest_framework.relations import StringRelatedField
 
 from core.models import Country, States, Cities, Timezone
 
