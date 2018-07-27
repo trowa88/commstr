@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.relations import StringRelatedField
 
 from building.serializers import BuildingSerializer
