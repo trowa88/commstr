@@ -18,6 +18,8 @@ class BuildingPostSerializer(serializers.ModelSerializer):
         )
 
     def update(self, instance, validated_data):
+        if self.context['request'].user != instance.creator:
+            raise PermissionDenied()
         new_instance = super(BuildingPostSerializer, self).update(instance, validated_data)
         BuildingPostHistory.objects.create(
             building_post=instance,
