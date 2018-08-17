@@ -1,5 +1,6 @@
 from rest_framework import viewsets
 from rest_framework.parsers import JSONParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from building.models import Building
 from building.serializers import BuildingSerializer, BuildingReadSerializer, BuildingHistorySerializer
@@ -8,6 +9,7 @@ from building.serializers import BuildingSerializer, BuildingReadSerializer, Bui
 class BuildingViewSet(viewsets.ModelViewSet):
     serializer_class = BuildingSerializer
     parser_classes = (MultiPartParser,)
+    permission_classes = (IsAuthenticatedOrReadOnly,)
     queryset = Building.objects.filter(is_enabled=True)
 
     def get_serializer_class(self):

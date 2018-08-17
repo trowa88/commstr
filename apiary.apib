@@ -1,13 +1,58 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: https://structunity.cf/
 
 # trowa88
 
-Polls is a simple API allowing consumers to view polls and vote in them.
+structunity API
 
-## Questions Collection [/questions]
 
-### List All Questions [GET]
+## OAuth token exchange [/api-token-auth/]
+Exchange credentials for `access_token`. Supported types:
+
++ `client_credentials`
+
+### Exchange credentials for token [POST]
+
++ Request
+    + Attributes (OAuth jwt-bearer grant request)
+
++ Response 200 (application/json)
+    + Attributes (OAuth valid response)
+
+## OAuth 2 Bearer Token protected resource [/protected]
+### Status [GET]
++ Request
+    + Headers
+
+            Authentication: Bearer JWT
+
++ Response 200 (application/json)
+    + Attributes (Server response)
+
+# Data Structures
+## OAuth grant request (object)
++ `grant_type`: `client_credentials` (string, required)
+
+## OAuth jwt-bearer grant request (object)
++ `username`: `urn:ietf:params:oauth:grant-type:jwt-bearer` (string, required)
++ password: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required)
+
+## OAuth valid response (object)
++ `access_token`: `eyJhbGciOiJIUzI1NiJ9.e30.XmNK3GpH3Ys_7wsYBfq4C3M6goz71I7dTgUkuIa5lyQ` (string, required) - valid JWT
++ scope: all (string, required) - scopes of current token
++ `expires_in`: 300 (number, required)
++ `token_type`: Bearer (string, required)
+
+## Server response (object)
++ status: ok (string, required)
+
+## Building Collection [/api/buildings/]
+
+### List All Buildings [GET]
++ Request
+    + Headers
+
+            Authentication: JWT token
 
 + Response 200 (application/json)
 
