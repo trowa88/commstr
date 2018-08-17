@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from comment.models import BuildingPostComment
 from comment.serializers import BuildingPostCommentSerializer, BuildingPostCommentReadSerializer
@@ -6,6 +7,7 @@ from comment.serializers import BuildingPostCommentSerializer, BuildingPostComme
 
 class BuildingPostCommentViewSet(viewsets.ModelViewSet):
     serializer_class = BuildingPostCommentSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         return BuildingPostComment.objects.filter(
