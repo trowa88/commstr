@@ -1,4 +1,5 @@
 from rest_framework import viewsets
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 
 from building_post.models import BuildingPost
 from building_post.serializers import BuildingPostSerializer, BuildingPostReadSerializer
@@ -6,6 +7,7 @@ from building_post.serializers import BuildingPostSerializer, BuildingPostReadSe
 
 class BuildingPostViewSet(viewsets.ModelViewSet):
     serializer_class = BuildingPostSerializer
+    permission_classes = (IsAuthenticatedOrReadOnly,)
 
     def get_queryset(self):
         return BuildingPost.objects.filter(
